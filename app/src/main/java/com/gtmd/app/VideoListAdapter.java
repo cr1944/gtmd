@@ -4,22 +4,25 @@ import android.arch.paging.PagedListAdapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.gtmd.app.Video.ResultsBean;
-import com.gtmd.app.VideoAdapter.VideoViewHolder;
+import com.gtmd.app.VideoListAdapter.VideoViewHolder;
 
 /**
  * Create time: 2017/12/4.
  */
 
-public class VideoAdapter extends PagedListAdapter<ResultsBean, VideoViewHolder> {
+public class VideoListAdapter extends PagedListAdapter<ResultsBean, VideoViewHolder> {
+  private MainActivity activity;
 
-  protected VideoAdapter() {
+  protected VideoListAdapter(MainActivity activity) {
     super(ResultsBean.DIFF_CALLBACK);
+    this.activity = activity;
   }
 
   @Override
@@ -33,7 +36,7 @@ public class VideoAdapter extends PagedListAdapter<ResultsBean, VideoViewHolder>
   public void onBindViewHolder(VideoViewHolder holder, int position) {
     ResultsBean bean = getItem(position);
     if (bean != null) {
-      holder.bindTo(bean);
+      holder.bindTo(bean, activity);
     }
   }
 
@@ -47,12 +50,18 @@ public class VideoAdapter extends PagedListAdapter<ResultsBean, VideoViewHolder>
       imageView = itemView.findViewById(R.id.video_image);
     }
 
-    public void bindTo(ResultsBean bean) {
+    public void bindTo(final ResultsBean bean, final MainActivity activity) {
       titleView.setText(bean.getTitle());
       Glide.with(itemView)
           .load(bean.getImg())
           .apply(new RequestOptions().placeholder(R.drawable.img_bg))
           .into(imageView);
+      itemView.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          activity.openVideo(bean);
+        }
+      });
     }
   }
 }

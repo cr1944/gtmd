@@ -1,6 +1,7 @@
 package com.gtmd.app;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.paging.DataSource;
 import android.arch.paging.LivePagedListProvider;
@@ -12,10 +13,23 @@ import com.gtmd.app.Video.ResultsBean;
  */
 
 public class VideoViewModel extends ViewModel {
-  TDataSource tDataSource;
-  public LiveData<PagedList<Video.ResultsBean>> videoList;
+  private TDataSource tDataSource;
+  private LiveData<PagedList<Video.ResultsBean>> videoList;
+  private final MutableLiveData<ResultsBean> selected = new MutableLiveData<>();
 
   public VideoViewModel() {
+  }
+
+  public LiveData<PagedList<ResultsBean>> getVideoList() {
+    return videoList;
+  }
+
+  public void setSelected(ResultsBean value) {
+    selected.setValue(value);
+  }
+
+  public LiveData<ResultsBean> getSelected() {
+    return selected;
   }
 
   public void init() {
